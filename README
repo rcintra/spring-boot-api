@@ -1,6 +1,8 @@
 #postgresql
 	createdb spring-boot-api
 
+	Cliente
+		psql -h localhost -U postgres -d spring-boot-api
 
 
 
