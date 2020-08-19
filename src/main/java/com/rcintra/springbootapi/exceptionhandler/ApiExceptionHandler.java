@@ -13,14 +13,28 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import com.rcintra.springbootapi.domain.exception.CadastroException;
 
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@Autowired
 	private MessageSource messageBundle;
+	
+	@ExceptionHandler(CadastroException.class)
+	public ResponseEntity<Object> handleCadastroException(CadastroException ex, WebRequest req) {
+		var status = HttpStatus.BAD_REQUEST;
+		var error = new ErrorHandler();
+		error.setStatus(status.value());
+		error.setTitle(ex.getMessage());
+		error.setDateTime(LocalDateTime.now());
+		
+		return handleExceptionInternal(ex, error, new HttpHeaders(), status, req);
+	}
 	
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,

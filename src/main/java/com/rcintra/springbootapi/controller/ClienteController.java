@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.rcintra.springbootapi.domain.service.CadastroClienteService;
 import com.rcintra.springbootapi.model.Cliente;
 import com.rcintra.springbootapi.service.ClienteService;
 
@@ -27,6 +28,9 @@ public class ClienteController {
 	
 	@Autowired
 	private ClienteService clienteService;
+	
+	@Autowired
+	private CadastroClienteService cadastroClienteService;
 
 	@GetMapping
 	public List<Cliente> listar() {
@@ -47,7 +51,7 @@ public class ClienteController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public Cliente adicionar(@Valid @RequestBody Cliente cliente) {
-		return clienteService.save(cliente);
+		return cadastroClienteService.salvar(cliente);
 	}
 	
 	
@@ -60,7 +64,7 @@ public class ClienteController {
 		}
 		
 		cliente.setId(clienteId);
-		cliente = clienteService.save(cliente);
+		cliente = cadastroClienteService.salvar(cliente);
 		
 		return ResponseEntity.ok(cliente);
 		
@@ -73,7 +77,7 @@ public class ClienteController {
 			return ResponseEntity.notFound().build();
 		}
 		
-		clienteService.deleteById(clienteId);
+		cadastroClienteService.excluir(clienteId);
 		
 		return ResponseEntity.noContent().build();
 		
