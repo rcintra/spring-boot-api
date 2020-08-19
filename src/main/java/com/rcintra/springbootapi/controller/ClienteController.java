@@ -18,24 +18,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.rcintra.springbootapi.domain.repository.ClienteRepository;
 import com.rcintra.springbootapi.model.Cliente;
+import com.rcintra.springbootapi.service.ClienteService;
 
 @RestController
 @RequestMapping("/clientes")
 public class ClienteController {
 	
 	@Autowired
-	private ClienteRepository clienteRepository;
+	private ClienteService clienteService;
 
 	@GetMapping
 	public List<Cliente> listar() {
-		return clienteRepository.findAll();
+		return clienteService.getAllClientes();
 	}
 	
 	@GetMapping("/{clienteId}")
 	public ResponseEntity<Cliente> buscar(@PathVariable Long clienteId) {
-		Optional<Cliente> cliente = clienteRepository.findById(clienteId);
+		Optional<Cliente> cliente = clienteService.getClienteById(clienteId);
 		
 		if (cliente.isPresent()) {
 			return ResponseEntity.ok(cliente.get());
@@ -47,7 +47,7 @@ public class ClienteController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public Cliente adicionar(@Valid @RequestBody Cliente cliente) {
-		return clienteRepository.save(cliente);
+		return clienteService.save(cliente);
 	}
 	
 	
@@ -55,12 +55,12 @@ public class ClienteController {
 	public ResponseEntity<Cliente> atualizar(@Valid @PathVariable Long clienteId, 
 			@RequestBody Cliente cliente) {
 		
-		if (!clienteRepository.existsById(clienteId)) {
+		if (!clienteService.exists(clienteId)) {
 			return ResponseEntity.notFound().build();
 		}
 		
 		cliente.setId(clienteId);
-		cliente = clienteRepository.save(cliente);
+		cliente = clienteService.save(cliente);
 		
 		return ResponseEntity.ok(cliente);
 		
@@ -69,11 +69,11 @@ public class ClienteController {
 	@DeleteMapping("/{clienteId}")
 	public ResponseEntity<Void> remover(@PathVariable Long clienteId) {
 		
-		if (!clienteRepository.existsById(clienteId)) {
+		if (!clienteService.exists(clienteId)) {
 			return ResponseEntity.notFound().build();
 		}
 		
-		clienteRepository.deleteById(clienteId);
+		clienteService.deleteById(clienteId);
 		
 		return ResponseEntity.noContent().build();
 		

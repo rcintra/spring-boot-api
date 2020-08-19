@@ -28,6 +28,18 @@ public class Cliente {
 	@Size(max = 255)
 	private String email;
 	
+	public Cliente() {	}
+	
+	public Cliente(String nome) {	
+		this.nome = nome;
+	}
+	
+	public Cliente(String nome, String email, String telefone) {	
+		this.nome = nome;
+		this.email = email;
+		this.telefone = telefone;
+	}
+	
 	public Long getId() {
 		return id;
 	}
